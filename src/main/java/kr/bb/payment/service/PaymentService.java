@@ -47,7 +47,7 @@ public class PaymentService {
     parameters.add("tax_free_amount", String.valueOf(dto.getTaxFreeAMount()));
 
     parameters.add(
-        "approval_url", FRONT_URL + "/payments/approve/" + dto.getOrderId() + dto.getUserId());
+        "approval_url", FRONT_URL + "/payments/approve/" + dto.getOrderId() + "/" + dto.getUserId());
     parameters.add("cancel_url", FRONT_URL + "/payments/cancel");
     parameters.add("fail_url", FRONT_URL + "/payments/fail");
 

@@ -1,4 +1,7 @@
 spring:
+  cloud:
+    config:
+      enabled: false
   h2:
     console:
       enabled: true
@@ -15,8 +18,7 @@ spring:
       hibernate:
         format_sql: true
 
-
 kakao:
   admin: e217481aeaeb6c14f8f10912b441f961
 host:
-  fronturl: localhost:3000
+  fronturl: http://localhost:3000

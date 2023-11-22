@@ -26,7 +26,7 @@ public class Payment extends BaseEntity {
   @Column(name = "payment_id")
   private Long paymentId;
 
-  @Column(name = "user_id", unique = true, nullable = false)
+  @Column(name = "user_id", nullable = false)
   private Long userId;
 
   @Column(name = "order_id", unique = true, nullable = false)
