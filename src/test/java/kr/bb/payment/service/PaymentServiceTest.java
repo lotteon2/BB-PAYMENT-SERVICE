@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class PaymentServiceTest {
   @Autowired
-  private PaymentService paymentService;
+  private KakaopayReadyService kakaopayReadyService;
 
   @DisplayName("단건결제 준비 - 픽업")
   @Test
@@ -29,7 +29,7 @@ public class PaymentServiceTest {
             .build();
 
     // then
-    KakaopayReadyResponseDto responseDto1 = paymentService.payReady(DTO_1);
+    KakaopayReadyResponseDto responseDto1 = kakaopayReadyService.kakaoPayReady(DTO_1);
     Assertions.assertEquals(20, responseDto1.getTid().length());
     Assertions.assertTrue(responseDto1.getNextRedirectPcUrl().startsWith("https://"));
   }
@@ -50,7 +50,7 @@ public class PaymentServiceTest {
             .build();
 
     // then
-    KakaopayReadyResponseDto responseDto2 = paymentService.payReady(DTO_2);
+    KakaopayReadyResponseDto responseDto2 = kakaopayReadyService.kakaoPayReady(DTO_2);
     Assertions.assertEquals(20, responseDto2.getTid().length());
     Assertions.assertTrue(responseDto2.getNextRedirectPcUrl().startsWith("https://"));
   }
