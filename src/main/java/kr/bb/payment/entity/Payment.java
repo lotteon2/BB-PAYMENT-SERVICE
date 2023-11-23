@@ -11,12 +11,14 @@ import javax.persistence.Table;
 import kr.bb.payment.entity.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "payment")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class Payment extends BaseEntity {
 
   @Id
@@ -24,7 +26,7 @@ public class Payment extends BaseEntity {
   @Column(name = "payment_id")
   private Long paymentId;
 
-  @Column(name = "user_id", unique = true, nullable = false)
+  @Column(name = "user_id", nullable = false)
   private Long userId;
 
   @Column(name = "order_id", unique = true, nullable = false)
@@ -32,7 +34,7 @@ public class Payment extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "orderType", nullable = false)
-  private String orderType;
+  private OrderType orderType;
 
   @Column(name = "payment_cid", nullable = false)
   private String paymentCid;
@@ -41,11 +43,14 @@ public class Payment extends BaseEntity {
   private String paymentTid;
 
   @Column(name = "payment_actual_amount", nullable = false)
-  private String paymentActualAmount;
+  private Long paymentActualAmount;
 
+  @Builder.Default
   @Column(name = "payment_type", nullable = false)
-  private String paymentType;
+  private String paymentType = "MONEY";
 
+  @Builder.Default
+  @Enumerated(EnumType.STRING)
   @Column(name = "payment_status", nullable = false)
-  private String paymentStatus;
+  private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 }

@@ -10,9 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableEurekaClient
 public class PaymentServiceApplication {
 
-public static void main(String[] args) {
+  public static void main(String[] args) {
     SpringApplication.run(PaymentServiceApplication.class, args);
+  }
 }
-
-}
-
