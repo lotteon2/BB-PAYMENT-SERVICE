@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class KakaopayApproveRequestDto {
     private Long orderId;
     private Long userId;
-    private String orderType; // 배송/픽업 판별용
     private String tid;
     private String pgToken;
 }

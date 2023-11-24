@@ -7,17 +7,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class PaymentServiceTest {
-  @Autowired
-  private KakaopayReadyService kakaopayReadyService;
+@Transactional
+public class KakaopayReadyTest {
+  @Autowired private KakaopayService kakaopayService;
 
   @DisplayName("단건결제 준비 - 픽업")
+  @DirtiesContext
   @Test
   void kakaopayReadyForDeliveryAndPickupTest() {
     // given
-    KakaopayReadyRequestDto DTO_1 = KakaopayReadyRequestDto.builder()
+    KakaopayReadyRequestDto DTO_1 =
+        KakaopayReadyRequestDto.builder()
             .userId("1")
             .orderId("1")
             .orderType("ORDER_PICKUP")
@@ -29,16 +33,18 @@ public class PaymentServiceTest {
             .build();
 
     // then
-    KakaopayReadyResponseDto responseDto1 = kakaopayReadyService.kakaoPayReady(DTO_1);
-    Assertions.assertEquals(20, responseDto1.getTid().length());
-    Assertions.assertTrue(responseDto1.getNextRedirectPcUrl().startsWith("https://"));
+    KakaopayReadyResponseDto responseDto = kakaopayService.kakaoPayReady(DTO_1);
+    Assertions.assertEquals(20, responseDto.getTid().length());
+    Assertions.assertTrue(responseDto.getNextRedirectPcUrl().startsWith("https://"));
   }
 
   @DisplayName("단건결제 준비 - 배송&구독")
+  @DirtiesContext
   @Test
-  void kakaopayReadyForSubscriptionTest(){
+  void kakaopayReadyForSubscriptionTest() {
     // given
-    KakaopayReadyRequestDto DTO_2 = KakaopayReadyRequestDto.builder()
+    KakaopayReadyRequestDto DTO_2 =
+        KakaopayReadyRequestDto.builder()
             .userId("1")
             .orderId("2")
             .orderType("ORDER_DELIVERY")
@@ -50,7 +56,7 @@ public class PaymentServiceTest {
             .build();
 
     // then
-    KakaopayReadyResponseDto responseDto2 = kakaopayReadyService.kakaoPayReady(DTO_2);
+    KakaopayReadyResponseDto responseDto2 = kakaopayService.kakaoPayReady(DTO_2);
     Assertions.assertEquals(20, responseDto2.getTid().length());
     Assertions.assertTrue(responseDto2.getNextRedirectPcUrl().startsWith("https://"));
   }

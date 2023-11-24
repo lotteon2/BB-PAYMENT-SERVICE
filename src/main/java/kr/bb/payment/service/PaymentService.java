@@ -1,6 +1,7 @@
 package kr.bb.payment.service;
 
 import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
+import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
 import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
 import kr.bb.payment.entity.OrderType;
 import kr.bb.payment.entity.Payment;
@@ -46,5 +47,30 @@ public class PaymentService {
     paymentRepository.save(payment);
 
     return responseDto;
+  }
+
+  /**
+   * orderId로 Payment Entity 찾기
+   *
+   * @param orderId
+   * @return
+   */
+  @Transactional
+  public Payment getPaymentEntity(Long orderId) {
+    return paymentRepository.findByOrderId(orderId);
+  }
+
+  /**
+   * 결제수단, 결제상태 업데이트(PENDING -> COMPLETED)
+   *
+   * @param paymentEntity
+   * @param approveResponse
+   */
+  @Transactional
+  public void updatePayInfo(Payment paymentEntity, KakaoPayApproveResponseDto approveResponse) {
+    paymentEntity.setPaymentType(approveResponse.getPaymentMethodType());
+    paymentEntity.setPaymentStatus(PaymentStatus.COMPLETED);
+
+    paymentRepository.save(paymentEntity);
   }
 }

@@ -1,7 +1,10 @@
 package kr.bb.payment.service;
 
+import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
 import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
+import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
 import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
+import kr.bb.payment.entity.Payment;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +17,9 @@ import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 @Component
-public class KakaopayReadyService {
+public class KakaopayService {
   private final PaymentService paymentService;
+  private final RestTemplate restTemplate;
 
   @Value("${kakao.admin}")
   private String ADMIN_KEY;
@@ -45,14 +49,35 @@ public class KakaopayReadyService {
     HttpEntity<MultiValueMap<String, String>> requestEntity =
         new HttpEntity<>(parameters, this.getHeaders());
 
-    RestTemplate template = new RestTemplate();
     String url = "https://kapi.kakao.com/v1/payment/ready";
     KakaopayReadyResponseDto responseDto =
-        template.postForObject(url, requestEntity, KakaopayReadyResponseDto.class);
+            restTemplate.postForObject(url, requestEntity, KakaopayReadyResponseDto.class);
 
     paymentService.savePayReadyInfo(requestDto, responseDto, cid);
 
     return responseDto;
+  }
+
+  public void kakaoPayApprove(KakaopayApproveRequestDto requestDto) {
+    Payment paymentEntity = paymentService.getPaymentEntity(requestDto.getOrderId());
+
+    MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+
+    parameters.add("cid", paymentEntity.getPaymentCid());
+    parameters.add("tid", requestDto.getTid());
+    parameters.add("partner_order_id", String.valueOf(requestDto.getOrderId()));
+    parameters.add("partner_user_id", String.valueOf(requestDto.getUserId()));
+    parameters.add("pg_token", requestDto.getPgToken());
+
+    HttpEntity<MultiValueMap<String, String>> requestEntity =
+        new HttpEntity<>(parameters, this.getHeaders());
+
+    String url = "https://kapi.kakao.com/v1/payment/approve";
+
+    KakaoPayApproveResponseDto approveResponse =
+            restTemplate.postForObject(url, requestEntity, KakaoPayApproveResponseDto.class);
+
+    paymentService.updatePayInfo(paymentEntity, approveResponse);
   }
 
   @NotNull
