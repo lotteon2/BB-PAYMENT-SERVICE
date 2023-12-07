@@ -1,5 +1,6 @@
 package kr.bb.payment.dto.request;
 
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +12,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaopayApproveRequestDto {
-    private Long orderId;
-    private Long userId;
-    private String tid;
-    private String pgToken;
+  @NotNull private Long userId;
+  @NotNull private String orderId;
+  @NotNull private String orderType;
+  @NotNull private String itemName;
+  @NotNull private int quantity;
+  @NotNull private int totalAmount;
+  @NotNull private int taxFreeAMount;
+  @NotNull private boolean isSubscriptionPay;
+  @NotNull private String cid;
+  @NotNull private String tid;
+  @NotNull private String pgToken;
 }
