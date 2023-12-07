@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
 import kr.bb.payment.entity.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,7 @@ public class Payment extends BaseEntity {
   private Long userId;
 
   @Column(name = "order_id", unique = true, nullable = false)
-  private Long orderId;
+  private String orderId;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "orderType", nullable = false)
@@ -56,5 +57,17 @@ public class Payment extends BaseEntity {
   @Builder.Default
   @Enumerated(EnumType.STRING)
   @Column(name = "payment_status", nullable = false)
-  private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+  private PaymentStatus paymentStatus = PaymentStatus.COMPLETED;
+
+  public static Payment toEntity(KakaopayApproveRequestDto requestDto, OrderType type) {
+    return Payment.builder()
+        .userId(Long.valueOf(requestDto.getUserId()))
+        .orderId(requestDto.getOrderId())
+        .orderType(type)
+        .paymentCid(requestDto.getCid())
+        .paymentTid(requestDto.getTid())
+        .paymentActualAmount((long) requestDto.getTotalAmount())
+        .paymentStatus(PaymentStatus.PENDING)
+        .build();
+  }
 }
