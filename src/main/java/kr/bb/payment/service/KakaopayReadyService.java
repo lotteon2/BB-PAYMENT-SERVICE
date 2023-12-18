@@ -38,9 +38,19 @@ public class KakaopayReadyService {
 
     parameters.add(
         "approval_url",
+<<<<<<< Updated upstream:src/main/java/kr/bb/payment/service/KakaopayReadyService.java
         FRONT_URL + "/payments/approve/" + requestDto.getOrderId() + "/" + requestDto.getUserId());
     parameters.add("cancel_url", FRONT_URL + "/payments/cancel");
     parameters.add("fail_url", FRONT_URL + "/payments/fail");
+=======
+        APIGATEWAY_SERVICE_URL
+            + "/api/orders/approve/"
+            + requestDto.getOrderId()
+            + "/"
+            + requestDto.getOrderType());
+    parameters.add("cancel_url", APIGATEWAY_SERVICE_URL + "/api/orders/cancel");
+    parameters.add("fail_url", APIGATEWAY_SERVICE_URL + "/api/orders/fail");
+>>>>>>> Stashed changes:src/main/java/kr/bb/payment/service/KakaopayService.java
 
     HttpEntity<MultiValueMap<String, String>> requestEntity =
         new HttpEntity<>(parameters, this.getHeaders());
