@@ -24,7 +24,7 @@ public class Subscription extends BaseEntity {
   private Long subscriptionId;
 
   @Column(name = "order_subscription_id", unique = true, nullable = false)
-  private Long orderSubscriptionId;
+  private String orderSubscriptionId;
 
   @Column(name = "subscription_cid", nullable = false)
   private String subscriptionCid;
@@ -35,18 +35,18 @@ public class Subscription extends BaseEntity {
   @Column(name = "subscription_sid", unique = true, nullable = false)
   private String subscriptionSid;
 
-  @Column(name = "subscription_quantity", unique = true, nullable = false)
+  @Column(name = "subscription_quantity", nullable = false)
   private Long subscriptionQuantity;
 
-  @Column(name = "subscription_total_amount", unique = true, nullable = false)
+  @Column(name = "subscription_total_amount", nullable = false)
   private Long subscriptionTotalAmount;
 
-  @Column(name = "payment_day", unique = true, nullable = false)
+  @Column(name = "payment_day", nullable = false)
   private String paymentDay;
 
-  @Column(name = "start_date", unique = true, nullable = false)
+  @Column(name = "start_date", nullable = false)
   private Date startDate;
 
-  @Column(name = "end_date", unique = true, nullable = true)
+  @Column(name = "end_date")
   private Date endDate;
 }

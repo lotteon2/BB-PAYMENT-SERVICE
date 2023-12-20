@@ -4,7 +4,6 @@ import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
 import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
 import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
 import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
-import kr.bb.payment.entity.Payment;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +27,7 @@ public class KakaopayService {
   private String APIGATEWAY_SERVICE_URL;
 
   public KakaopayReadyResponseDto kakaoPayReady(KakaopayReadyRequestDto requestDto) {
-    String cid = requestDto.isSubscriptionPay() ? "TC0ONETIME" : "TCSUBSCRIP";
+    String cid = requestDto.isSubscriptionPay() ? "TCSUBSCRIP" : "TC0ONETIME";
 
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
