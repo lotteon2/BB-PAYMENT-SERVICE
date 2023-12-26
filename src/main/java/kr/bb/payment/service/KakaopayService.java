@@ -1,5 +1,6 @@
 package kr.bb.payment.service;
 
+import java.time.LocalDateTime;
 import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
 import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
 import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
@@ -59,7 +60,7 @@ public class KakaopayService {
     return responseDto;
   }
 
-  public void kakaoPayApprove(KakaopayApproveRequestDto requestDto) {
+  public LocalDateTime kakaoPayApprove(KakaopayApproveRequestDto requestDto) {
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
     parameters.add("cid", requestDto.getCid());
@@ -75,7 +76,7 @@ public class KakaopayService {
 
     restTemplate.postForObject(url, requestEntity, KakaoPayApproveResponseDto.class);
 
-    paymentService.savePaymentInfo(requestDto);
+    return paymentService.savePaymentInfo(requestDto);
   }
 
   @NotNull

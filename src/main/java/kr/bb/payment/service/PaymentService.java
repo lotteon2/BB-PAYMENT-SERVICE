@@ -1,5 +1,6 @@
 package kr.bb.payment.service;
 
+import java.time.LocalDateTime;
 import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
 import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
 import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
@@ -24,7 +25,7 @@ public class PaymentService {
    * @return void
    */
   @Transactional
-  public void savePaymentInfo(
+  public LocalDateTime savePaymentInfo(
       KakaopayApproveRequestDto requestDto) {
 
     OrderType type =
@@ -35,5 +36,6 @@ public class PaymentService {
     // Payment 객체를 DB에 저장
     Payment payment = Payment.toEntity(requestDto, type);
     paymentRepository.save(payment);
+    return payment.getCreatedAt();
   }
 }

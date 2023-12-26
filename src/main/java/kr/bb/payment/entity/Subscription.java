@@ -1,5 +1,6 @@
 package kr.bb.payment.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,12 +42,12 @@ public class Subscription extends BaseEntity {
   @Column(name = "subscription_total_amount", nullable = false)
   private Long subscriptionTotalAmount;
 
-  @Column(name = "payment_day", nullable = false)
-  private String paymentDay;
+  @Column(name = "payment_date", nullable = false)
+  private LocalDate paymentDate;
 
   @Column(name = "start_date", nullable = false)
-  private Date startDate;
+  private LocalDate startDate;
 
   @Column(name = "end_date")
-  private Date endDate;
+  private LocalDate endDate;
 }
