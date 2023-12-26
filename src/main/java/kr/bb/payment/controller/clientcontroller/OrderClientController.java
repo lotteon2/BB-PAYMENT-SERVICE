@@ -1,49 +1,46 @@
 package kr.bb.payment.controller.clientcontroller;
 
 import bloomingblooms.response.SuccessResponse;
+import java.time.LocalDateTime;
 import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
 import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
 import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
 import kr.bb.payment.service.KakaopayService;
-import kr.bb.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
+@RequestMapping("/client")
 @RequiredArgsConstructor
 public class OrderClientController {
 
-  private final PaymentService paymentService;
   private final KakaopayService kakaopayService;
 
   @PostMapping("/ready")
-  public ResponseEntity<SuccessResponse<KakaopayReadyResponseDto>> payReady(
+  public SuccessResponse<KakaopayReadyResponseDto> payReady(
       @RequestBody KakaopayReadyRequestDto readyRequestDto) {
 
     KakaopayReadyResponseDto responseDto = kakaopayService.kakaoPayReady(readyRequestDto);
 
-    return ResponseEntity.ok()
-        .body(
-            SuccessResponse.<KakaopayReadyResponseDto>builder()
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message(HttpStatus.OK.name())
-                .data(responseDto)
-                .build());
+    return SuccessResponse.<KakaopayReadyResponseDto>builder()
+        .data(responseDto)
+        .message(HttpStatus.OK.name())
+        .build();
   }
 
   @PostMapping("/approve")
-  public ResponseEntity<SuccessResponse<Void>> payApprove(@RequestBody KakaopayApproveRequestDto approveRequestDto){
+  public SuccessResponse<LocalDateTime> payApprove(
+      @RequestBody KakaopayApproveRequestDto approveRequestDto) {
 
-    kakaopayService.kakaoPayApprove(approveRequestDto);
+    LocalDateTime paymentDateTime = kakaopayService.kakaoPayApprove(approveRequestDto);
 
-    return ResponseEntity.ok().body(SuccessResponse.<Void>builder()
-            .code(String.valueOf(HttpStatus.OK.value()))
-            .message(HttpStatus.OK.name())
-            .build());
+    return SuccessResponse.<LocalDateTime>builder()
+        .data(paymentDateTime)
+        .message(HttpStatus.OK.name())
+        .build();
   }
 }

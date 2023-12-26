@@ -1,10 +1,10 @@
 package kr.bb.payment.service;
 
+import java.time.LocalDateTime;
 import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
 import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
 import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
 import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
-import kr.bb.payment.entity.Payment;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +28,7 @@ public class KakaopayService {
   private String APIGATEWAY_SERVICE_URL;
 
   public KakaopayReadyResponseDto kakaoPayReady(KakaopayReadyRequestDto requestDto) {
-    String cid = requestDto.isSubscriptionPay() ? "TC0ONETIME" : "TCSUBSCRIP";
+    String cid = requestDto.isSubscriptionPay() ? "TCSUBSCRIP" : "TC0ONETIME";
 
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
@@ -46,7 +46,7 @@ public class KakaopayService {
             + "/api/orders/approve/"
             + requestDto.getOrderId()
             + "/"
-            + requestDto.getUserId());
+            + requestDto.getOrderType());
     parameters.add("cancel_url", APIGATEWAY_SERVICE_URL + "/api/orders/cancel");
     parameters.add("fail_url", APIGATEWAY_SERVICE_URL + "/api/orders/fail");
 
@@ -60,7 +60,7 @@ public class KakaopayService {
     return responseDto;
   }
 
-  public void kakaoPayApprove(KakaopayApproveRequestDto requestDto) {
+  public LocalDateTime kakaoPayApprove(KakaopayApproveRequestDto requestDto) {
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
     parameters.add("cid", requestDto.getCid());
@@ -76,7 +76,7 @@ public class KakaopayService {
 
     restTemplate.postForObject(url, requestEntity, KakaoPayApproveResponseDto.class);
 
-    paymentService.savePaymentInfo(requestDto);
+    return paymentService.savePaymentInfo(requestDto);
   }
 
   @NotNull
