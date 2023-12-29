@@ -21,4 +21,4 @@ spring:
 kakao:
   admin: e217481aeaeb6c14f8f10912b441f961
 endpoint:
-  apigateway-service: http://localhost:3000
+  front-url: http://localhost:3000
