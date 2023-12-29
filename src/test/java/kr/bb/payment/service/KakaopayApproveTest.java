@@ -1,9 +1,12 @@
 package kr.bb.payment.service;
 
+import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.time.LocalDateTime;
+
 import kr.bb.payment.dto.response.Amount;
-import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
+import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,22 +33,24 @@ public class KakaopayApproveTest {
   void setUp() throws Exception {
     mockServer = MockRestServiceServer.createServer(restTemplate);
 
-    KakaoPayApproveResponseDto responseDto =
-        KakaoPayApproveResponseDto.builder()
+    KakaopayApproveResponseDto responseDto =
+        KakaopayApproveResponseDto.builder()
             .aid("A5678901234567890123")
             .tid("T1234567890123456789")
             .cid("TC0ONETIME")
+            .sid("sid가상번호")
             .partnerOrderId("partner_order_id")
             .partnerUserId("partner_user_id")
             .paymentMethodType("MONEY")
             .itemName("초코파이")
             .quantity(1)
             .amount(new Amount(2200, 0, 200, 0, 0))
-            .createdAt("2016-11-15T21:18:22")
-            .approvedAt("2016-11-15T21:20:47")
+            .createdAt(LocalDateTime.now())
+            .approvedAt(LocalDateTime.now())
             .build();
 
     ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule());
     String responseJson = objectMapper.writeValueAsString(responseDto);
 
     mockServer
@@ -92,6 +97,18 @@ public class KakaopayApproveTest {
         .cid("가게가맹점코드")
         .tid("T1234567890123456789")
         .pgToken("pg_token=xxxxxxxxxxxxxxxxxxxx")
+        .deliveryId(1L)
         .build();
+  }
+
+  @DisplayName("결제 승인 테스트 - 구독")
+  @DirtiesContext
+  @Test
+  void kakaoPayApproveForSubscriptionTest() {
+    KakaopayApproveRequestDto requestDto =
+        creatApproveRequestDto("임시orderId2", "ORDER_SUBSCRIPTION");
+
+    kakaopayService.kakaoPayApprove(requestDto);
+    mockServer.verify();
   }
 }

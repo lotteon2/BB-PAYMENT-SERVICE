@@ -12,8 +12,12 @@ import javax.persistence.Table;
 import kr.bb.payment.entity.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
+@Builder
 @Entity
 @Table(name = "subscription_records")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,7 +30,7 @@ public class SubscriptionRecords extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "subcription_id")
-  private Subscription subscriptionId;
+  private Subscription subscription;
 
   @Column(name = "delivery_id", unique = true, nullable = false)
   private Long deliveryId;
@@ -34,6 +38,8 @@ public class SubscriptionRecords extends BaseEntity {
   @Column(name = "subscription_total_amount", unique = true, nullable = false)
   private Long subscriptionTotalAmount;
 
-  @Column(name = "subscription_status", unique = true, nullable = false)
-  private String subscriptionStatus;
+  public void setSubscription(Subscription subscription){
+    this.subscription = subscription;
+    subscription.getSubscriptionRecordsList().add(this);
+  }
 }

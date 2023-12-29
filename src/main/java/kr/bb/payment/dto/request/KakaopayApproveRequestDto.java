@@ -1,5 +1,6 @@
 package kr.bb.payment.dto.request;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,4 +24,5 @@ public class KakaopayApproveRequestDto {
   @NotNull private String cid;
   @NotNull private String tid;
   @NotNull private String pgToken;
+  @Nullable private Long deliveryId;
 }

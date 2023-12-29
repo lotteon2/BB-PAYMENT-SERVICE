@@ -1,7 +1,7 @@
 package kr.bb.payment.service;
 
-import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
-import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
+import bloomingblooms.domain.payment.KakaopayReadyRequestDto;
+import bloomingblooms.domain.payment.KakaopayReadyResponseDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
