@@ -35,7 +35,7 @@ public class SubscriptionRecords extends BaseEntity {
   @Column(name = "delivery_id", unique = true, nullable = false)
   private Long deliveryId;
 
-  @Column(name = "subscription_total_amount", unique = true, nullable = false)
+  @Column(name = "subscription_total_amount", nullable = false)
   private Long subscriptionTotalAmount;
 
   public void setSubscription(Subscription subscription){

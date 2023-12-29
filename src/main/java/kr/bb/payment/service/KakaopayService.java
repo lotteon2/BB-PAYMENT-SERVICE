@@ -24,8 +24,8 @@ public class KakaopayService {
   @Value("${kakao.admin}")
   private String ADMIN_KEY;
 
-  @Value("${endpoint.front-url}")
-  private String FRONT_URL;
+  @Value("${endpoint.order-service}")
+  private String ORDER_SERVICE_URL;
 
   public KakaopayReadyResponseDto kakaoPayReady(KakaopayReadyRequestDto requestDto) {
     String cid = requestDto.isSubscriptionPay() ? "TCSUBSCRIP" : "TC0ONETIME";
@@ -42,13 +42,13 @@ public class KakaopayService {
 
     parameters.add(
         "approval_url",
-            FRONT_URL
+            ORDER_SERVICE_URL
             + "/api/orders/approve/"
             + requestDto.getOrderId()
             + "/"
             + requestDto.getOrderType());
-    parameters.add("cancel_url", FRONT_URL + "/api/orders/cancel");
-    parameters.add("fail_url", FRONT_URL + "/api/orders/fail");
+    parameters.add("cancel_url", ORDER_SERVICE_URL + "/api/orders/cancel");
+    parameters.add("fail_url", ORDER_SERVICE_URL + "/api/orders/fail");
 
     HttpEntity<MultiValueMap<String, String>> requestEntity =
         new HttpEntity<>(parameters, this.getHeaders());
