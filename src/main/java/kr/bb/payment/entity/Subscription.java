@@ -1,18 +1,25 @@
 package kr.bb.payment.entity;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import kr.bb.payment.entity.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+@Getter
+@Builder
 @Entity
 @Table(name = "subscription")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +30,10 @@ public class Subscription extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "subscription_id")
   private Long subscriptionId;
+
+  @Builder.Default
+  @OneToMany(mappedBy = "subscription", cascade = CascadeType.PERSIST, orphanRemoval = true)
+  private List<SubscriptionRecords> subscriptionRecordsList = new ArrayList<>();
 
   @Column(name = "order_subscription_id", unique = true, nullable = false)
   private String orderSubscriptionId;
@@ -43,11 +54,11 @@ public class Subscription extends BaseEntity {
   private Long subscriptionTotalAmount;
 
   @Column(name = "payment_date", nullable = false)
-  private LocalDate paymentDate;
+  private LocalDateTime paymentDate;
 
   @Column(name = "start_date", nullable = false)
-  private LocalDate startDate;
+  private LocalDateTime startDate;
 
   @Column(name = "end_date")
-  private LocalDate endDate;
+  private LocalDateTime endDate;
 }

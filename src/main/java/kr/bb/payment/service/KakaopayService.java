@@ -1,10 +1,10 @@
 package kr.bb.payment.service;
 
+import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
+import bloomingblooms.domain.payment.KakaopayReadyRequestDto;
+import bloomingblooms.domain.payment.KakaopayReadyResponseDto;
 import java.time.LocalDateTime;
-import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
-import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
-import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
-import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
+import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,9 +74,9 @@ public class KakaopayService {
 
     String url = "https://kapi.kakao.com/v1/payment/approve";
 
-    restTemplate.postForObject(url, requestEntity, KakaoPayApproveResponseDto.class);
+    KakaopayApproveResponseDto responseDto = restTemplate.postForObject(url, requestEntity, KakaopayApproveResponseDto.class);
 
-    return paymentService.savePaymentInfo(requestDto);
+    return paymentService.savePaymentInfo(requestDto, responseDto);
   }
 
   @NotNull
