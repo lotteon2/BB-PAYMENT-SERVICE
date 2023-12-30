@@ -1,6 +1,7 @@
 package kr.bb.payment.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class KakaoPayApproveResponseDto {
+public class KakaopayApproveResponseDto {
   private String aid; // 요청 고유번호
   private String tid; // 결제 고유번호
   private String cid; // 가맹점 코드
@@ -30,8 +31,8 @@ public class KakaoPayApproveResponseDto {
   private String itemName;
   private Integer quantity;
   @JsonProperty("created_at")
-  private String createdAt;
+  private LocalDateTime createdAt;
   @JsonProperty("approved_at")
-  private String approvedAt;
+  private LocalDateTime approvedAt;
   private Amount amount;
 }

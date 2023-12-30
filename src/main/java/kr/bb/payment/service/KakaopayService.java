@@ -1,10 +1,10 @@
 package kr.bb.payment.service;
 
+import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
+import bloomingblooms.domain.payment.KakaopayReadyRequestDto;
+import bloomingblooms.domain.payment.KakaopayReadyResponseDto;
 import java.time.LocalDateTime;
-import kr.bb.payment.dto.request.KakaopayApproveRequestDto;
-import kr.bb.payment.dto.request.KakaopayReadyRequestDto;
-import kr.bb.payment.dto.response.KakaoPayApproveResponseDto;
-import kr.bb.payment.dto.response.KakaopayReadyResponseDto;
+import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +24,8 @@ public class KakaopayService {
   @Value("${kakao.admin}")
   private String ADMIN_KEY;
 
-  @Value("${endpoint.apigateway-service}")
-  private String APIGATEWAY_SERVICE_URL;
+  @Value("${endpoint.order-service}")
+  private String ORDER_SERVICE_URL;
 
   public KakaopayReadyResponseDto kakaoPayReady(KakaopayReadyRequestDto requestDto) {
     String cid = requestDto.isSubscriptionPay() ? "TCSUBSCRIP" : "TC0ONETIME";
@@ -42,13 +42,13 @@ public class KakaopayService {
 
     parameters.add(
         "approval_url",
-        APIGATEWAY_SERVICE_URL
+            ORDER_SERVICE_URL
             + "/api/orders/approve/"
             + requestDto.getOrderId()
             + "/"
             + requestDto.getOrderType());
-    parameters.add("cancel_url", APIGATEWAY_SERVICE_URL + "/api/orders/cancel");
-    parameters.add("fail_url", APIGATEWAY_SERVICE_URL + "/api/orders/fail");
+    parameters.add("cancel_url", ORDER_SERVICE_URL + "/api/orders/cancel");
+    parameters.add("fail_url", ORDER_SERVICE_URL + "/api/orders/fail");
 
     HttpEntity<MultiValueMap<String, String>> requestEntity =
         new HttpEntity<>(parameters, this.getHeaders());
@@ -74,9 +74,9 @@ public class KakaopayService {
 
     String url = "https://kapi.kakao.com/v1/payment/approve";
 
-    restTemplate.postForObject(url, requestEntity, KakaoPayApproveResponseDto.class);
+    KakaopayApproveResponseDto responseDto = restTemplate.postForObject(url, requestEntity, KakaopayApproveResponseDto.class);
 
-    return paymentService.savePaymentInfo(requestDto);
+    return paymentService.savePaymentInfo(requestDto, responseDto);
   }
 
   @NotNull
