@@ -32,7 +32,7 @@ public class SubscriptionRecords extends BaseEntity {
   @JoinColumn(name = "subcription_id")
   private Subscription subscription;
 
-  @Column(name = "delivery_id", unique = true, nullable = false)
+  @Column(name = "delivery_id", unique = true)
   private Long deliveryId;
 
   @Column(name = "subscription_total_amount", nullable = false)
@@ -41,5 +41,9 @@ public class SubscriptionRecords extends BaseEntity {
   public void setSubscription(Subscription subscription){
     this.subscription = subscription;
     subscription.getSubscriptionRecordsList().add(this);
+  }
+
+  public void setDeliveryId(Long deliveryId){
+    this.deliveryId = deliveryId;
   }
 }

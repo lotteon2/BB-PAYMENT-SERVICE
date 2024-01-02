@@ -17,8 +17,39 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring:
+          deserializer:
+            value:
+              delegate:
+                class: org.springframework.kafka.support.serializer.JsonDeserializer
+          json:
+            trusted:
+              packages: "*"
+
+      group-id: payment-service
 
 kakao:
   admin: e217481aeaeb6c14f8f10912b441f961
 endpoint:
   order-service: http://localhost:8900
+  delivery-service: http://localhost:8300
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-1
+    credentials:
+      ACCESS_KEY_ID: "test"
+      SECRET_ACCESS_KEY: "test"

@@ -1,12 +1,18 @@
 package kr.bb.payment.service;
 
+import bloomingblooms.domain.batch.SubscriptionBatchDto;
 import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyResponseDto;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
 import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
+import kr.bb.payment.feign.DeliveryServiceClient;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 public class KakaopayService {
   private final PaymentService paymentService;
   private final RestTemplate restTemplate;
+  private final DeliveryServiceClient deliveryServiceClient;
 
   @Value("${kakao.admin}")
   private String ADMIN_KEY;
@@ -28,7 +35,7 @@ public class KakaopayService {
   private String ORDER_SERVICE_URL;
 
   public KakaopayReadyResponseDto kakaoPayReady(KakaopayReadyRequestDto requestDto) {
-    String cid = requestDto.isSubscriptionPay() ? "TCSUBSCRIP" : "TC0ONETIME";
+    String cid = requestDto.getIsSubscriptionPay() ? "TCSUBSCRIP" : "TC0ONETIME";
 
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
@@ -76,7 +83,37 @@ public class KakaopayService {
 
     KakaopayApproveResponseDto responseDto = restTemplate.postForObject(url, requestEntity, KakaopayApproveResponseDto.class);
 
-    return paymentService.savePaymentInfo(requestDto, responseDto);
+    return paymentService.saveSinglePaymentInfo(requestDto, responseDto);
+  }
+
+  public void renewSubscription(List<SubscriptionBatchDto> subscriptionBatchDtoList) {
+    Map<Long, Long> oldDeliveryIdsMap = new HashMap<>(); // <결제기록id, old 배송id>
+
+    for(SubscriptionBatchDto subscriptionBatchDto : subscriptionBatchDtoList){
+      MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+
+      parameters.add("cid", subscriptionBatchDto.getCid());
+      parameters.add("sid", subscriptionBatchDto.getSid());
+      parameters.add("partner_order_id", String.valueOf(subscriptionBatchDto.getPartnerOrderId()));
+      parameters.add("partner_user_id", String.valueOf(subscriptionBatchDto.getPartnerUserId()));
+      parameters.add("quantity", String.valueOf(subscriptionBatchDto.getQuantity()));
+      parameters.add("totalAmount", String.valueOf(subscriptionBatchDto.getTotalAmount()));
+
+      HttpEntity<MultiValueMap<String, String>> requestEntity =
+              new HttpEntity<>(parameters, this.getHeaders());
+
+      String url = "https://kapi.kakao.com/v1/payment/subscription";
+
+      KakaopayApproveResponseDto responseDto = restTemplate.postForObject(url, requestEntity, KakaopayApproveResponseDto.class);
+      List<Long> subRecordIdAndDeliveryId = paymentService.saveRegularSubscriptionInfo(responseDto);
+      oldDeliveryIdsMap.put(subRecordIdAndDeliveryId.get(0), subRecordIdAndDeliveryId.get(1));
+    }
+
+    // 배송 생성 및 배송id 저장하기
+    List<Long> oldDeliveryIdsList = new ArrayList<>(oldDeliveryIdsMap.values());
+    List<Long> newDeliveryIdsList = deliveryServiceClient.createDeliveryForSubscription(oldDeliveryIdsList).getData();
+    paymentService.saveDeliveryIds(oldDeliveryIdsMap, newDeliveryIdsList);
+
   }
 
   @NotNull

@@ -5,7 +5,8 @@ import kr.bb.payment.entity.Subscription;
 import kr.bb.payment.entity.SubscriptionRecords;
 
 public class SubscriptionMapper {
-  public static Subscription toSubscriptionEntity(KakaopayApproveResponseDto responseDto) {
+  public static Subscription toSubscriptionEntity(
+      String phoneNumber, KakaopayApproveResponseDto responseDto) {
     return Subscription.builder()
         .orderSubscriptionId(responseDto.getPartnerOrderId())
         .subscriptionCid(responseDto.getCid())
@@ -15,6 +16,8 @@ public class SubscriptionMapper {
         .subscriptionTotalAmount(Long.valueOf(responseDto.getAmount().getTotal()))
         .startDate(responseDto.getCreatedAt()) // 시작일
         .paymentDate(responseDto.getCreatedAt().plusDays(30)) // 다음 결제일을 저장
+        .userId(Long.valueOf(responseDto.getPartnerUserId()))
+        .phoneNumber(phoneNumber)
         .build();
   }
 
