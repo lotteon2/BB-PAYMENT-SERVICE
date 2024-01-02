@@ -36,14 +36,15 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation "org.springframework.cloud:spring-cloud-starter-bus-kafka"
+    implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'io.github.lotteon-maven:blooming-blooms-utils:202312290714'
+    implementation 'io.github.lotteon-maven:blooming-blooms-utils:202401012350'
     runtimeOnly 'com.h2database:h2'
     implementation 'mysql:mysql-connector-java:8.0.33'
     testImplementation 'org.mock-server:mockserver-netty:5.11.2' // 사용 중인 MockServer 버전
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 dependencyManagement {

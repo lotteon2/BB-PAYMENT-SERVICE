@@ -4,7 +4,6 @@ import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDateTime;
-
 import kr.bb.payment.dto.response.Amount;
 import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
 import org.junit.jupiter.api.AfterEach;
@@ -40,7 +39,7 @@ public class KakaopayApproveTest {
             .cid("TC0ONETIME")
             .sid("sid가상번호")
             .partnerOrderId("partner_order_id")
-            .partnerUserId("partner_user_id")
+            .partnerUserId("1")
             .paymentMethodType("MONEY")
             .itemName("초코파이")
             .quantity(1)
@@ -98,6 +97,7 @@ public class KakaopayApproveTest {
         .tid("T1234567890123456789")
         .pgToken("pg_token=xxxxxxxxxxxxxxxxxxxx")
         .deliveryId(1L)
+        .phoneNumber("010-1111-1111")
         .build();
   }
 
