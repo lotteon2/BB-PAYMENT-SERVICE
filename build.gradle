@@ -38,7 +38,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'io.github.lotteon-maven:blooming-blooms-utils:202401012350'
+    implementation 'io.github.lotteon-maven:blooming-blooms-utils:202401030507'
     runtimeOnly 'com.h2database:h2'
     implementation 'mysql:mysql-connector-java:8.0.33'
     testImplementation 'org.mock-server:mockserver-netty:5.11.2' // 사용 중인 MockServer 버전

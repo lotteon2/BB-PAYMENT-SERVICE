@@ -11,12 +11,13 @@ spring:
     url: jdbc:h2:mem:payment-service;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     generate-ddl: true
     defer-datasource-initialization: true
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
   kafka:
     producer:
       bootstrap-servers: localhost:9092
@@ -35,7 +36,6 @@ spring:
           json:
             trusted:
               packages: "*"
-
       group-id: payment-service
 
 kakao:

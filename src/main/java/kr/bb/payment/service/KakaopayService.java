@@ -1,6 +1,7 @@
 package kr.bb.payment.service;
 
 import bloomingblooms.domain.batch.SubscriptionBatchDto;
+import bloomingblooms.domain.batch.SubscriptionBatchDtoList;
 import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyResponseDto;
@@ -86,10 +87,10 @@ public class KakaopayService {
     return paymentService.saveSinglePaymentInfo(requestDto, responseDto);
   }
 
-  public void renewSubscription(List<SubscriptionBatchDto> subscriptionBatchDtoList) {
+  public void renewSubscription(SubscriptionBatchDtoList subscriptionBatchDtoList) {
     Map<Long, Long> oldDeliveryIdsMap = new HashMap<>(); // <결제기록id, old 배송id>
 
-    for(SubscriptionBatchDto subscriptionBatchDto : subscriptionBatchDtoList){
+    for(SubscriptionBatchDto subscriptionBatchDto : subscriptionBatchDtoList.getSubscriptionBatchDtoList()){
       MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
       parameters.add("cid", subscriptionBatchDto.getCid());
@@ -97,7 +98,9 @@ public class KakaopayService {
       parameters.add("partner_order_id", String.valueOf(subscriptionBatchDto.getPartnerOrderId()));
       parameters.add("partner_user_id", String.valueOf(subscriptionBatchDto.getPartnerUserId()));
       parameters.add("quantity", String.valueOf(subscriptionBatchDto.getQuantity()));
-      parameters.add("totalAmount", String.valueOf(subscriptionBatchDto.getTotalAmount()));
+      parameters.add("total_amount", String.valueOf(subscriptionBatchDto.getTotalAmount()));
+      parameters.add("tax_free_amount", String.valueOf(0));
+
 
       HttpEntity<MultiValueMap<String, String>> requestEntity =
               new HttpEntity<>(parameters, this.getHeaders());
@@ -113,6 +116,9 @@ public class KakaopayService {
     List<Long> oldDeliveryIdsList = new ArrayList<>(oldDeliveryIdsMap.values());
     List<Long> newDeliveryIdsList = deliveryServiceClient.createDeliveryForSubscription(oldDeliveryIdsList).getData();
     paymentService.saveDeliveryIds(oldDeliveryIdsMap, newDeliveryIdsList);
+
+    // SQS 로 구매자에게 주문 발생 알림
+
 
   }
 
