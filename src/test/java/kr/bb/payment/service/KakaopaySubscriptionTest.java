@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import bloomingblooms.domain.batch.SubscriptionBatchDto;
+import bloomingblooms.domain.batch.SubscriptionBatchDtoList;
 import bloomingblooms.response.CommonResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -45,7 +46,6 @@ public class KakaopaySubscriptionTest {
 
   @BeforeEach
   void setUp() throws Exception {
-//    kakaopayService = new KakaopayService(paymentService, restTemplate, deliveryServiceClient);
     mockServer = MockRestServiceServer.createServer(restTemplate);
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -64,7 +64,10 @@ public class KakaopaySubscriptionTest {
   public void batchSubscription() {
     // given
     SubscriptionBatchDto subscriptionBatchDto = createSubscriptionBatchDto();
-    List<SubscriptionBatchDto> subscriptionBatchDtoList = List.of(subscriptionBatchDto);
+    SubscriptionBatchDtoList subscriptionBatchDtoList =
+        SubscriptionBatchDtoList.builder()
+            .subscriptionBatchDtoList(List.of(subscriptionBatchDto))
+            .build();
     SubscriptionRecords subscriptionRecords = createSubscriptionRecords();
     Subscription subscription = createSubscription();
     subscriptionRepository.save(subscription);
