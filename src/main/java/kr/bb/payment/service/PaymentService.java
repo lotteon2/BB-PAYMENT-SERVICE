@@ -1,12 +1,14 @@
 package kr.bb.payment.service;
 
+import bloomingblooms.domain.notification.order.OrderType;
 import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
+import bloomingblooms.domain.payment.PaymentInfoDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
-import kr.bb.payment.entity.OrderType;
 import kr.bb.payment.entity.Payment;
 import kr.bb.payment.entity.Subscription;
 import kr.bb.payment.entity.SubscriptionRecords;
@@ -31,7 +33,7 @@ public class PaymentService {
       KakaopayApproveRequestDto requestDto, KakaopayApproveResponseDto responseDto) {
 
     // 정기 결제 저장
-    if (OrderType.ORDER_SUBSCRIPTION.toString().equals(requestDto.getOrderType())) {
+    if (OrderType.SUBSCRIBE.toString().equals(requestDto.getOrderType())) {
       String phoneNumber = requestDto.getPhoneNumber();
       Subscription subscription = SubscriptionMapper.toSubscriptionEntity(phoneNumber, responseDto);
       // 배송id도 함께 저장
@@ -77,5 +79,29 @@ public class PaymentService {
           subscriptionRecordsRepository.findById(key).orElseThrow(EntityNotFoundException::new);
       subscriptionRecords.setDeliveryId(value);
     }
+  }
+
+  @Transactional
+  public List<PaymentInfoDto> getPaymentInfo(List<String> orderGroupIds) {
+    List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(orderGroupIds);
+    return allPaymentsByOrderIds.stream()
+        .map(
+            payment -> {
+              return PaymentInfoDto.builder()
+                  .orderGroupId(payment.getOrderId())
+                  .paymentActualAmount(payment.getPaymentActualAmount())
+                  .createdAt(payment.getCreatedAt())
+                  .build();
+            })
+        .collect(Collectors.toList());
+  }
+
+  @Transactional
+  public String getPaymentDate(String orderGroupId){
+    Payment payment = paymentRepository.findByOrderId(orderGroupId);
+    if(payment != null){
+      return payment.getCreatedAt().toString();
+    }
+    return "";
   }
 }

@@ -67,7 +67,7 @@ public class KakaopayApproveTest {
   @DirtiesContext
   @Test
   void kakaoPayApproveForDeliveryTest() {
-    KakaopayApproveRequestDto requestDto = creatApproveRequestDto("임시orderId1", "ORDER_DELIVERY");
+    KakaopayApproveRequestDto requestDto = creatApproveRequestDto("임시orderId1", "DELIVERY");
 
     kakaopayService.kakaoPayApprove(requestDto);
     mockServer.verify();
@@ -77,7 +77,7 @@ public class KakaopayApproveTest {
   @DirtiesContext
   @Test
   void kakaoPayApproveForPickupTest() {
-    KakaopayApproveRequestDto requestDto = creatApproveRequestDto("임시orderId2", "ORDER_PICKUP");
+    KakaopayApproveRequestDto requestDto = creatApproveRequestDto("임시orderId2", "PICKUP");
 
     kakaopayService.kakaoPayApprove(requestDto);
     mockServer.verify();
@@ -106,7 +106,7 @@ public class KakaopayApproveTest {
   @Test
   void kakaoPayApproveForSubscriptionTest() {
     KakaopayApproveRequestDto requestDto =
-        creatApproveRequestDto("임시orderId2", "ORDER_SUBSCRIPTION");
+        creatApproveRequestDto("임시orderId2", "SUBSCRIBE");
 
     kakaopayService.kakaoPayApprove(requestDto);
     mockServer.verify();
