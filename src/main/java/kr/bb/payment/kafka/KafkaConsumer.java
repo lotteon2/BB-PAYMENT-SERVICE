@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaConsumer<T> {
   private final KakaopayService kakaopayService;
-  private ObjectMapper objectMapper;
 
   @KafkaListener(topics = "subscription-batch", groupId = "payment-subscription")
   public void subscriptionBatch(SubscriptionBatchDtoList subscriptionBatchDtoList) {

@@ -117,9 +117,6 @@ public class KakaopayService {
     List<Long> newDeliveryIdsList = deliveryServiceClient.createDeliveryForSubscription(oldDeliveryIdsList).getData();
     paymentService.saveDeliveryIds(oldDeliveryIdsMap, newDeliveryIdsList);
 
-    // SQS 로 구매자에게 주문 발생 알림
-
-
   }
 
   @NotNull

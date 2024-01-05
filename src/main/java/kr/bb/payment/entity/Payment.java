@@ -1,5 +1,6 @@
 package kr.bb.payment.entity;
 
+import bloomingblooms.domain.notification.order.OrderType;
 import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,7 +62,7 @@ public class Payment extends BaseEntity {
 
   public static Payment toEntity(KakaopayApproveRequestDto requestDto, OrderType type) {
     return Payment.builder()
-        .userId(Long.valueOf(requestDto.getUserId()))
+        .userId(requestDto.getUserId())
         .orderId(requestDto.getOrderId())
         .orderType(type)
         .paymentCid(requestDto.getCid())
