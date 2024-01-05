@@ -51,12 +51,12 @@ public class KakaopayService {
     parameters.add(
         "approval_url",
             ORDER_SERVICE_URL
-            + "/api/orders/approve/"
+            + "/approve/"
             + requestDto.getOrderId()
             + "/"
             + requestDto.getOrderType());
-    parameters.add("cancel_url", ORDER_SERVICE_URL + "/api/orders/cancel");
-    parameters.add("fail_url", ORDER_SERVICE_URL + "/api/orders/fail");
+    parameters.add("cancel_url", ORDER_SERVICE_URL + "/cancel");
+    parameters.add("fail_url", ORDER_SERVICE_URL + "/fail");
 
     HttpEntity<MultiValueMap<String, String>> requestEntity =
         new HttpEntity<>(parameters, this.getHeaders());
