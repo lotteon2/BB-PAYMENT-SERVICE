@@ -38,8 +38,8 @@ public class OrderClientController {
     return CommonResponse.success(kakaopayService.kakaoPayApprove(approveRequestDto));
   }
 
-  @GetMapping("/paymentInfo")
-  CommonResponse<List<PaymentInfoDto>> getPaymentInfo(@RequestParam List<String> orderGroupIds){
+  @PostMapping("/paymentInfo")
+  CommonResponse<List<PaymentInfoDto>> getPaymentInfo(@RequestBody List<String> orderGroupIds){
     return CommonResponse.success(paymentService.getPaymentInfo(orderGroupIds));
   }
 
