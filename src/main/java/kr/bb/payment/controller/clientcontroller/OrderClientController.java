@@ -43,7 +43,7 @@ public class OrderClientController {
     return CommonResponse.success(paymentService.getPaymentInfo(orderGroupIds));
   }
 
-  @GetMapping(value = "/client/paymentDate")
+  @GetMapping(value = "/paymentDate")
   CommonResponse<String> getPaymentDate(@RequestParam String orderGroupId){
     return CommonResponse.success(paymentService.getPaymentDate(orderGroupId));
   }
