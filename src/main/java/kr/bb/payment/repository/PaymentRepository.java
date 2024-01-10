@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Payment findByOrderId(String orderId);
-    @Query("select p from Payment p where p.orderId = :orderIds")
+    @Query("select p from Payment p where p.orderId in :orderIds")
     List<Payment> findAllByOrderIds(List<String> orderIds);
 }
