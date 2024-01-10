@@ -39,7 +39,7 @@ public class Payment extends BaseEntity {
   private String orderId;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "orderType", nullable = false)
+  @Column(name = "order_type", nullable = false)
   private OrderType orderType;
 
   @Column(name = "payment_cid", nullable = false)
