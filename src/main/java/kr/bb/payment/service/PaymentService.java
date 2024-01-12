@@ -104,4 +104,9 @@ public class PaymentService {
     }
     return "";
   }
+
+  @Transactional(readOnly = true)
+  public Payment getPaymentEntity(String orderGroupId){
+    return paymentRepository.findByOrderId(orderGroupId);
+  }
 }

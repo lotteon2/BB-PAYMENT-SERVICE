@@ -11,7 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
+import kr.bb.payment.dto.request.KakaopayCancelRequestDto;
 import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
+import kr.bb.payment.dto.response.KakaopayCancelResponseDto;
+import kr.bb.payment.entity.Payment;
 import kr.bb.payment.feign.DeliveryServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -117,6 +120,23 @@ public class KakaopayService {
     List<Long> newDeliveryIdsList = deliveryServiceClient.createDeliveryForSubscription(oldDeliveryIdsList).getData();
     paymentService.saveDeliveryIds(oldDeliveryIdsMap, newDeliveryIdsList);
 
+  }
+
+  public void cancelPayment(KakaopayCancelRequestDto cancelRequestDto){
+    Payment paymentEntity = paymentService.getPaymentEntity(cancelRequestDto.getOrderId());
+
+    MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+
+    parameters.add("cid", paymentEntity.getPaymentCid());
+    parameters.add("tid", paymentEntity.getPaymentTid());
+    parameters.add("cancel_amount", String.valueOf(cancelRequestDto.getCancelAmount()));
+    parameters.add("cancel_tax_free_amount", String.valueOf(0L));
+
+    HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+    String url = "https://kapi.kakao.com/v1/payment/cancel";
+
+    restTemplate.postForObject(url, requestEntity, KakaopayCancelResponseDto.class);
   }
 
   @NotNull

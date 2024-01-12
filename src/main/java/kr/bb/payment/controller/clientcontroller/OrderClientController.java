@@ -7,6 +7,7 @@ import bloomingblooms.domain.payment.PaymentInfoDto;
 import bloomingblooms.response.CommonResponse;
 import java.time.LocalDateTime;
 import java.util.List;
+import kr.bb.payment.dto.request.KakaopayCancelRequestDto;
 import kr.bb.payment.service.KakaopayService;
 import kr.bb.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,11 @@ public class OrderClientController {
   @GetMapping(value = "/paymentDate")
   CommonResponse<String> getPaymentDate(@RequestParam String orderGroupId){
     return CommonResponse.success(paymentService.getPaymentDate(orderGroupId));
+  }
+
+  @PostMapping(value = "/cancel")
+  CommonResponse<Void> cancel(@RequestBody KakaopayCancelRequestDto cancelRequestDto){
+    kakaopayService.cancelPayment(cancelRequestDto);
+    return CommonResponse.success(null);
   }
 }
