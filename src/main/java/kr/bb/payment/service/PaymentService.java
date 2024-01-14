@@ -109,4 +109,9 @@ public class PaymentService {
   public Payment getPaymentEntity(String orderGroupId){
     return paymentRepository.findByOrderId(orderGroupId);
   }
+
+  @Transactional
+  public Subscription getSubscriptionEntity(String orderSubscriptionId) {
+    return subscriptionRepository.findByOrderSubscriptionId(orderSubscriptionId).orElseThrow(EntityNotFoundException::new);
+  }
 }

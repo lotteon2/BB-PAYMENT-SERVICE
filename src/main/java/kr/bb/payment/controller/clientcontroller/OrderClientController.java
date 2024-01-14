@@ -1,5 +1,6 @@
 package kr.bb.payment.controller.clientcontroller;
 
+import bloomingblooms.domain.batch.SubscriptionBatchDtoList;
 import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyResponseDto;
@@ -52,6 +53,18 @@ public class OrderClientController {
   @PostMapping(value = "/cancel")
   CommonResponse<Void> cancel(@RequestBody KakaopayCancelRequestDto cancelRequestDto){
     kakaopayService.cancelPayment(cancelRequestDto);
+    return CommonResponse.success(null);
+  }
+
+  @PostMapping(value = "/subscription")
+  CommonResponse<Void> subscription(@RequestBody SubscriptionBatchDtoList subscriptionBatchDtolist){
+    kakaopayService.renewSubscription(subscriptionBatchDtolist);
+    return CommonResponse.success(null);
+  }
+
+  @PostMapping(value = "/subscription/cancel")
+  CommonResponse<Void> cancelSubscription(@RequestBody KakaopayCancelRequestDto cancelRequestDto){
+    kakaopayService.cancelSubscription(cancelRequestDto);
     return CommonResponse.success(null);
   }
 }

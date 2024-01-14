@@ -14,7 +14,9 @@ import javax.validation.constraints.NotNull;
 import kr.bb.payment.dto.request.KakaopayCancelRequestDto;
 import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
 import kr.bb.payment.dto.response.KakaopayCancelResponseDto;
+import kr.bb.payment.dto.response.KakaopayCancelSubscriptionResponseDto;
 import kr.bb.payment.entity.Payment;
+import kr.bb.payment.entity.Subscription;
 import kr.bb.payment.feign.DeliveryServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -94,16 +96,21 @@ public class KakaopayService {
     Map<Long, Long> oldDeliveryIdsMap = new HashMap<>(); // <결제기록id, old 배송id>
 
     for(SubscriptionBatchDto subscriptionBatchDto : subscriptionBatchDtoList.getSubscriptionBatchDtoList()){
+      Long userId = subscriptionBatchDto.getUserId();
+      String orderSubscriptionId = subscriptionBatchDto.getOrderSubscriptionId();
+
+      Subscription subscription = paymentService.getSubscriptionEntity(
+              subscriptionBatchDto.getOrderSubscriptionId());
+
       MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
-      parameters.add("cid", subscriptionBatchDto.getCid());
-      parameters.add("sid", subscriptionBatchDto.getSid());
-      parameters.add("partner_order_id", String.valueOf(subscriptionBatchDto.getPartnerOrderId()));
-      parameters.add("partner_user_id", String.valueOf(subscriptionBatchDto.getPartnerUserId()));
-      parameters.add("quantity", String.valueOf(subscriptionBatchDto.getQuantity()));
-      parameters.add("total_amount", String.valueOf(subscriptionBatchDto.getTotalAmount()));
+      parameters.add("cid", subscription.getSubscriptionCid());
+      parameters.add("sid", subscription.getSubscriptionSid());
+      parameters.add("partner_order_id", String.valueOf(orderSubscriptionId));
+      parameters.add("partner_user_id", String.valueOf(userId));
+      parameters.add("quantity", String.valueOf(subscription.getSubscriptionQuantity()));
+      parameters.add("total_amount", String.valueOf(subscription.getSubscriptionTotalAmount()));
       parameters.add("tax_free_amount", String.valueOf(0));
-
 
       HttpEntity<MultiValueMap<String, String>> requestEntity =
               new HttpEntity<>(parameters, this.getHeaders());
@@ -137,6 +144,21 @@ public class KakaopayService {
     String url = "https://kapi.kakao.com/v1/payment/cancel";
 
     restTemplate.postForObject(url, requestEntity, KakaopayCancelResponseDto.class);
+  }
+
+  public void cancelSubscription(KakaopayCancelRequestDto cancelRequestDto ){
+    Subscription subscription = paymentService.getSubscriptionEntity(cancelRequestDto.getOrderId());
+
+    MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+
+    parameters.add("cid", subscription.getSubscriptionCid());
+    parameters.add("sid", subscription.getSubscriptionSid());
+
+    HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+    String url = "https://kapi.kakao.com/v1/payment/manage/subscription/inactive";
+
+    restTemplate.postForObject(url, requestEntity, KakaopayCancelSubscriptionResponseDto.class);
   }
 
   @NotNull
