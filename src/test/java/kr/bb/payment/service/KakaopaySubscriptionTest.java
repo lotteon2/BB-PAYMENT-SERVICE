@@ -89,14 +89,7 @@ public class KakaopaySubscriptionTest {
   }
 
   private SubscriptionBatchDto createSubscriptionBatchDto() {
-    return SubscriptionBatchDto.builder()
-        .cid("TCSUBSCRIP")
-        .sid("sid 고유번호")
-        .partnerOrderId("partner_order_id_1")
-        .partnerUserId("1")
-        .quantity(1L)
-        .totalAmount(44500L)
-        .build();
+    return SubscriptionBatchDto.builder().userId(1L).orderSubscriptionId("구독 주문 id").build();
   }
 
   private SubscriptionRecords createSubscriptionRecords() {
@@ -105,7 +98,7 @@ public class KakaopaySubscriptionTest {
 
   private Subscription createSubscription() {
     return Subscription.builder()
-        .orderSubscriptionId("주문 id")
+        .orderSubscriptionId("구독 주문 id")
         .subscriptionCid("TCSUBSCRIP")
         .subscriptionTid("tid 고유번호")
         .subscriptionSid("sid 고유번호")
