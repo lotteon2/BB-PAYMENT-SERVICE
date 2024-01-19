@@ -82,7 +82,7 @@ public class PaymentService {
   }
 
   @Transactional
-  public List<PaymentInfoDto> getPaymentInfo(List<String> orderGroupIds) {
+  public Map<String, PaymentInfoDto> getPaymentInfo(List<String> orderGroupIds) {
     List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(orderGroupIds);
     return allPaymentsByOrderIds.stream()
         .map(
@@ -93,7 +93,7 @@ public class PaymentService {
                   .createdAt(payment.getCreatedAt())
                   .build();
             })
-        .collect(Collectors.toList());
+        .collect(Collectors.toMap(PaymentInfoDto::getOrderGroupId, dto -> dto));
   }
 
   @Transactional
