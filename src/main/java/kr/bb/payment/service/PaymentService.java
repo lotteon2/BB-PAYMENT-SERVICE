@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
+import kr.bb.payment.dto.request.PaymentInfoMapDto;
 import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
 import kr.bb.payment.entity.Payment;
 import kr.bb.payment.entity.Subscription;
@@ -82,18 +83,21 @@ public class PaymentService {
   }
 
   @Transactional
-  public Map<String, PaymentInfoDto> getPaymentInfo(List<String> orderGroupIds) {
+  public PaymentInfoMapDto getPaymentInfo(List<String> orderGroupIds) {
     List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(orderGroupIds);
-    return allPaymentsByOrderIds.stream()
-        .map(
-            payment -> {
-              return PaymentInfoDto.builder()
-                  .orderGroupId(payment.getOrderId())
-                  .paymentActualAmount(payment.getPaymentActualAmount())
-                  .createdAt(payment.getCreatedAt())
-                  .build();
-            })
-        .collect(Collectors.toMap(PaymentInfoDto::getOrderGroupId, dto -> dto));
+    Map<String, PaymentInfoDto> paymentInfoDtoMap = allPaymentsByOrderIds.stream()
+            .map(
+                    payment -> {
+                      return PaymentInfoDto.builder()
+                              .orderGroupId(payment.getOrderId())
+                              .paymentActualAmount(payment.getPaymentActualAmount())
+                              .createdAt(payment.getCreatedAt())
+                              .build();
+                    })
+            .collect(Collectors.toMap(PaymentInfoDto::getOrderGroupId, dto -> dto));
+    return PaymentInfoMapDto.builder()
+            .paymentInfoDtoMap(paymentInfoDtoMap)
+            .build();
   }
 
   @Transactional
