@@ -3,7 +3,6 @@ package kr.bb.payment.service;
 import bloomingblooms.domain.notification.order.OrderType;
 import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import bloomingblooms.domain.payment.PaymentInfoDto;
-import bloomingblooms.domain.payment.PaymentInfoMapDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -83,9 +82,9 @@ public class PaymentService {
   }
 
   @Transactional
-  public PaymentInfoMapDto getPaymentInfo(List<String> orderGroupIds ) {
+  public List<PaymentInfoDto> getPaymentInfo(List<String> orderGroupIds ) {
     List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(orderGroupIds);
-    Map<String, PaymentInfoDto> paymentInfoDtoMap = allPaymentsByOrderIds.stream()
+    return allPaymentsByOrderIds.stream()
             .map(
                     payment -> {
                       return PaymentInfoDto.builder()
@@ -94,10 +93,7 @@ public class PaymentService {
                               .createdAt(payment.getCreatedAt())
                               .build();
                     })
-            .collect(Collectors.toMap(PaymentInfoDto::getOrderGroupId, dto -> dto));
-    return PaymentInfoMapDto.builder()
-            .paymentInfoDtoMap(paymentInfoDtoMap)
-            .build();
+            .collect(Collectors.toList());
   }
 
   @Transactional
