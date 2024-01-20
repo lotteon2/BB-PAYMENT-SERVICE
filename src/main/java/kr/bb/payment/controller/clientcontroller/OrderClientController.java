@@ -4,12 +4,11 @@ import bloomingblooms.domain.batch.SubscriptionBatchDtoList;
 import bloomingblooms.domain.payment.KakaopayApproveRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyRequestDto;
 import bloomingblooms.domain.payment.KakaopayReadyResponseDto;
+import bloomingblooms.domain.payment.PaymentInfoMapDto;
 import bloomingblooms.response.CommonResponse;
+import bloomingblooms.domain.payment.PaymentInfoRequestDto;
 import java.time.LocalDateTime;
-import java.util.List;
 import kr.bb.payment.dto.request.KakaopayCancelRequestDto;
-import kr.bb.payment.dto.request.PaymentInfoMapDto;
-import kr.bb.payment.dto.request.PaymentInfoRequestDto;
 import kr.bb.payment.service.KakaopayService;
 import kr.bb.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +41,8 @@ public class OrderClientController {
   }
 
   @PostMapping("/paymentInfo")
-  CommonResponse<PaymentInfoMapDto> getPaymentInfo(@RequestBody List<String> orderGroupIds ){
-    return CommonResponse.success(paymentService.getPaymentInfo(orderGroupIds));
+  CommonResponse<PaymentInfoMapDto> getPaymentInfo(@RequestBody PaymentInfoRequestDto paymentInfoRequestDto ){
+    return CommonResponse.success(paymentService.getPaymentInfo(paymentInfoRequestDto.getOrderGroupIds()));
   }
 
   @GetMapping(value = "/paymentDate")
