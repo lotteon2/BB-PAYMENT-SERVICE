@@ -84,8 +84,8 @@ public class PaymentService {
   }
 
   @Transactional
-  public PaymentInfoMapDto getPaymentInfo(PaymentInfoRequestDto requestDto ) {
-    List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(requestDto.getOrderGroupIds());
+  public PaymentInfoMapDto getPaymentInfo(List<String> orderGroupIds ) {
+    List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(orderGroupIds);
     Map<String, PaymentInfoDto> paymentInfoDtoMap = allPaymentsByOrderIds.stream()
             .map(
                     payment -> {

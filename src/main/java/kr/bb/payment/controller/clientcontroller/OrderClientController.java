@@ -42,8 +42,8 @@ public class OrderClientController {
   }
 
   @PostMapping("/paymentInfo")
-  CommonResponse<PaymentInfoMapDto> getPaymentInfo(@RequestBody PaymentInfoRequestDto requestDto ){
-    return CommonResponse.success(paymentService.getPaymentInfo(requestDto));
+  CommonResponse<PaymentInfoMapDto> getPaymentInfo(@RequestBody List<String> orderGroupIds ){
+    return CommonResponse.success(paymentService.getPaymentInfo(orderGroupIds));
   }
 
   @GetMapping(value = "/paymentDate")

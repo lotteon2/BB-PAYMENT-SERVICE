@@ -16,7 +16,7 @@ public class PaymentServiceTest {
     @Autowired private PaymentService paymentService;
     @Test
     void getPaymentInfoTest(){
-        PaymentInfoMapDto paymentInfoMapDto = paymentService.getPaymentInfo(PaymentInfoRequestDto.builder().orderGroupIds(List.of("임시주문번호")).build());
+        PaymentInfoMapDto paymentInfoMapDto = paymentService.getPaymentInfo(List.of("임시주문번호"));
         assertThat(paymentInfoMapDto.getPaymentInfoDtoMap().size()).isEqualTo(0);
     }
 
