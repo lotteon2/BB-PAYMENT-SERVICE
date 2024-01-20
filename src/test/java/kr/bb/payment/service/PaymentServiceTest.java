@@ -2,9 +2,8 @@ package kr.bb.payment.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import bloomingblooms.domain.payment.PaymentInfoMapDto;
 import java.util.List;
-import kr.bb.payment.dto.request.PaymentInfoMapDto;
-import kr.bb.payment.dto.request.PaymentInfoRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
