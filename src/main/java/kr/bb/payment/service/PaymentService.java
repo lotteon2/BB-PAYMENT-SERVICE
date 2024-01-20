@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import kr.bb.payment.dto.request.PaymentInfoMapDto;
+import kr.bb.payment.dto.request.PaymentInfoRequestDto;
 import kr.bb.payment.dto.response.KakaopayApproveResponseDto;
 import kr.bb.payment.entity.Payment;
 import kr.bb.payment.entity.Subscription;
@@ -83,8 +84,8 @@ public class PaymentService {
   }
 
   @Transactional
-  public PaymentInfoMapDto getPaymentInfo(List<String> orderGroupIds) {
-    List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(orderGroupIds);
+  public PaymentInfoMapDto getPaymentInfo(PaymentInfoRequestDto requestDto ) {
+    List<Payment> allPaymentsByOrderIds = paymentRepository.findAllByOrderIds(requestDto.getOrderGroupIds());
     Map<String, PaymentInfoDto> paymentInfoDtoMap = allPaymentsByOrderIds.stream()
             .map(
                     payment -> {

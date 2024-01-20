@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import kr.bb.payment.dto.request.KakaopayCancelRequestDto;
 import kr.bb.payment.dto.request.PaymentInfoMapDto;
+import kr.bb.payment.dto.request.PaymentInfoRequestDto;
 import kr.bb.payment.service.KakaopayService;
 import kr.bb.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,8 @@ public class OrderClientController {
   }
 
   @PostMapping("/paymentInfo")
-  CommonResponse<PaymentInfoMapDto> getPaymentInfo(@RequestBody List<String> orderGroupIds){
-    return CommonResponse.success(paymentService.getPaymentInfo(orderGroupIds));
+  CommonResponse<PaymentInfoMapDto> getPaymentInfo(@RequestBody PaymentInfoRequestDto requestDto ){
+    return CommonResponse.success(paymentService.getPaymentInfo(requestDto));
   }
 
   @GetMapping(value = "/paymentDate")
